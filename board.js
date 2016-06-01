@@ -8,14 +8,14 @@
 // clear()
 // getState()
   // returns object with
-  // state: 'none', 'check', 'checkmate', 'end'
+  // state: 'none', 'check', 'checkmate', 'end', 'invalid'
   // player: 'x' (or 'o' or undefined)
-// 
+// print()
 
 var BOARD_DIMENSION = 3;
-var O_MARK = 0;
-var X_MARK = 1;
-var EMPTY_MARK = 2;
+var O_MARK = 'o';
+var X_MARK = 'x';
+var EMPTY_MARK = ' ';
 
 var Board = function() {
   this._positions = [];
@@ -46,6 +46,59 @@ Board.prototype.clear = function() {
   }
 };
 
-Board.prototype.getState = function() {
+Board.prototype.print = function() {
+  var singleLine = repeatedChar('-', BOARD_DIMENSION * 4 + 1);
+  var doubleLine = repeatedChar('=', BOARD_DIMENSION * 4 + 1);
 
+  var result = doubleLine + '\n';
+  result += this._positions.map(function(row) {
+    return '| ' + row.join(' | ') + ' |' + '\n';
+  }).join(singleLine + '\n');
+  result += doubleLine;
+
+  console.log(result);
 };
+
+// TODO
+Board.prototype.getState = function() {
+  // check rows, cols, and diagonals for:
+    // win state
+    // check state
+  // then perform logic for determining overall state:
+    // win
+    // checkmate
+    // check
+    // none
+    // invalid
+
+  var win = EMPTY_MARK;
+  var checkForO = [];
+  var checkForX = [];
+  var state = '';
+  // this._forEachPosition(function(mark) {
+  //   if (mark !== EMPTY_MARK && mark !== )
+  // });
+  // this._forEachLine(function(marks, positions) {
+  //   // check win state
+  //   if (marks[O_MARK] === BOARD_DIMENSION ||
+  //       marks[X_MARK] === BOARD_DIMENSION) {
+  //     if (win === EMPTY_MARK) {
+  //       win = 
+  //     }
+  //   }
+  // });
+};
+
+// helper function
+var repeatedChar = function(char, numTimes) {
+  var result = '';
+  for (var i = 0; i < numTimes; i++) {
+    result += char;
+  }
+  return result;
+}
+
+module.exports = Board;
+
+var b = new Board();
+b.print();
