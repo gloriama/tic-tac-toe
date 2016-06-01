@@ -90,6 +90,14 @@ Board.prototype.getState = function() {
   // });
 };
 
+Board.prototype.hasWinner = function() {
+  return this._positions[0][0] !== ' ';
+};
+
+Board.prototype.getWinner = function() {
+  return 'x';
+};
+
 // helper function
 var repeatedChar = function(char, numTimes) {
   var result = '';

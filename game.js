@@ -31,15 +31,20 @@ var runTurns = function(board, callback) {
       return err;
     }
 
-    if (isValidIndex(result.r) && isValidIndex(result.c)) {
+    if (!isValidIndex(result.r) || !isValidIndex(result.c)) {
+      console.log('Please enter integers from 0 to', BOARD_DIMENSION - 1);
+      runTurns(board, callback);
+    } else {
       var r = parseInt(result.r);
       var c = parseInt(result.c);
       board.set(r, c, constants.X_MARK);
       board.print();
-    } else {
-      console.log('Please enter integers from 0 to', BOARD_DIMENSION - 1);
+      if (board.hasWinner()) {
+        callback(board.getWinner());
+      } else {
+        runTurns(board, callback);
+      }
     }
-    runTurns(board, callback);
   })
 };
 
