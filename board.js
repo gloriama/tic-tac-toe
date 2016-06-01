@@ -12,10 +12,11 @@
   // player: 'x' (or 'o' or undefined)
 // print()
 
-var BOARD_DIMENSION = 3;
-var O_MARK = 'o';
-var X_MARK = 'x';
-var EMPTY_MARK = ' ';
+var constants = require('./constants');
+var BOARD_DIMENSION = constants.BOARD_DIMENSION;
+var O_MARK = constants.O_MARK;
+var X_MARK = constants.X_MARK;
+var EMPTY_MARK = constants.EMPTY_MARK;
 
 var Board = function() {
   this._positions = [];
