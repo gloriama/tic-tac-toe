@@ -39,7 +39,8 @@ var runTurns = function(board, callback) {
       var c = parseInt(result.c);
       board.set(r, c, constants.X_MARK);
       board.print();
-      if (board.hasWinner()) {
+      console.log(board.getWinner());
+      if (board.getWinner() !== undefined) {
         callback(board.getWinner());
       } else {
         runTurns(board, callback);

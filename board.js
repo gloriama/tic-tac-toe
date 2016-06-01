@@ -90,12 +90,71 @@ Board.prototype.getState = function() {
   // });
 };
 
-Board.prototype.hasWinner = function() {
-  return this._positions[0][0] !== ' ';
-};
-
+// if no one has won, return undefined
 Board.prototype.getWinner = function() {
-  return 'x';
+  // check rows
+  for (var r = 0; r < BOARD_DIMENSION; r++) {
+    var candidate;
+    for (var c = 0; c < BOARD_DIMENSION; c++) {
+      if (this.get(r, c) === EMPTY_MARK ||
+          candidate !== undefined &&
+          this.get(r, c) !== candidate) {
+        candidate = undefined;
+        break;
+      }
+      candidate = this.get(r, c);
+    }
+    if (candidate !== undefined) {
+      return candidate;
+    }
+  }
+
+  // check columns
+  for (var c = 0; c < BOARD_DIMENSION; c++) {
+    var candidate;
+    for (var r = 0; r < BOARD_DIMENSION; r++) {
+      if (this.get(r, c) === EMPTY_MARK ||
+          candidate !== undefined &&
+          this.get(r, c) !== candidate) {
+        candidate = undefined;
+        break;
+      }
+      candidate = this.get(r, c);
+    }
+    if (candidate !== undefined) {
+      return candidate;
+    }
+  }
+
+  // check major diagonal
+  var candidate;
+  for (var r = 0; r < BOARD_DIMENSION; r++) {
+    var c = r;
+    if (this.get(r, c) === EMPTY_MARK ||
+        candidate !== undefined && this.get(r, c) !== candidate) {
+      candidate = undefined;
+      break;
+    }
+    candidate = this.get(r, c);
+  }
+  if (candidate !== undefined) {
+    return candidate;
+  }
+
+  // check minor diagonal
+  candidate = undefined;
+  for (var r = 0; r < BOARD_DIMENSION; r++) {
+    var c = BOARD_DIMENSION - 1 - r;
+    if (this.get(r, c) === EMPTY_MARK ||
+        candidate !== undefined && this.get(r, c) !== candidate) {
+      candidate = undefined;
+      break;
+    }
+    candidate = this.get(r, c);
+  }
+  if (candidate !== undefined) {
+    return candidate;
+  }  
 };
 
 // helper function
