@@ -13,25 +13,30 @@
 // print()
 
 var utils = require('./utils');
-var constants = require('./constants');
-var BOARD_DIMENSION = constants.BOARD_DIMENSION;
-var O_MARK = constants.O_MARK;
-var X_MARK = constants.X_MARK;
-var EMPTY_MARK = constants.EMPTY_MARK;
+var DEFAULT_SIDELENGTH = 3;
+var DEFAULT_O_MARK = 'o';
+var DEFAULT_X_MARK = 'x';
+var DEFAULT_EMPTY_MARK = ' ';
 
-var Board = function() {
+var Board = function(options) {
+  options = options || {};
+  this.sideLength = options.sideLength || DEFAULT_SIDELENGTH;
+  this.oMark = options.oMark || DEFAULT_O_MARK;
+  this.xMark = options.xMark || DEFAULT_X_MARK;
+  this.emptyMark = options.emptyMark || DEFAULT_EMPTY_MARK;
+
   this._positions = [];
-  for (var r = 0; r < BOARD_DIMENSION; r++) {
+  for (var r = 0; r < this.sideLength; r++) {
     var newRow = [];
-    for (var c = 0; c < BOARD_DIMENSION; c++) {
-      newRow.push(EMPTY_MARK);
+    for (var c = 0; c < this.sideLength; c++) {
+      newRow.push(this.emptyMark);
     }
     this._positions.push(newRow);
   }
 };
 
 Board.prototype.set = function(r, c, mark) {
-  if (this._positions[r][c] !== EMPTY_MARK) {
+  if (this._positions[r][c] !== this.emptyMark) {
     return false;
   } else {
     this._positions[r][c] = mark;
@@ -44,16 +49,16 @@ Board.prototype.get = function(r, c) {
 };
 
 Board.prototype.clear = function() {
-  for (var r = 0; r < BOARD_DIMENSION; r++) {
-    for (var c = 0; c < BOARD_DIMENSION; c++) {
-      this._positions[r][c] = EMPTY_MARK;
+  for (var r = 0; r < this.sideLength; r++) {
+    for (var c = 0; c < this.sideLength; c++) {
+      this._positions[r][c] = this.emptyMark;
     }
   }
 };
 
 Board.prototype.print = function() {
-  var singleLine = utils.repeatedChar('-', BOARD_DIMENSION * 4 + 1);
-  var doubleLine = utils.repeatedChar('=', BOARD_DIMENSION * 4 + 1);
+  var singleLine = utils.repeatedChar('-', this.sideLength * 4 + 1);
+  var doubleLine = utils.repeatedChar('=', this.sideLength * 4 + 1);
 
   var result = doubleLine + '\n';
   result += this._positions.map(function(row) {
@@ -76,18 +81,18 @@ Board.prototype.getState = function() {
     // none
     // invalid
 
-  var win = EMPTY_MARK;
+  var win = this.emptyMark;
   var checkForO = [];
   var checkForX = [];
   var state = '';
   // this._forEachPosition(function(mark) {
-  //   if (mark !== EMPTY_MARK && mark !== )
+  //   if (mark !== this.emptyMark && mark !== )
   // });
   // this._forEachLine(function(marks, positions) {
   //   // check win state
-  //   if (marks[O_MARK] === BOARD_DIMENSION ||
-  //       marks[X_MARK] === BOARD_DIMENSION) {
-  //     if (win === EMPTY_MARK) {
+  //   if (marks[this.oMark] === this.sideLength ||
+  //       marks[this.xMark] === this.sideLength) {
+  //     if (win === this.emptyMark) {
   //       win = 
   //     }
   //   }
@@ -107,10 +112,10 @@ Board.prototype.getWinner = function() {
     };
   };
 
-  if (this.checkFor(isAll(X_MARK))) {
-    return X_MARK;
-  } else if (this.checkFor(isAll(O_MARK))) {
-    return O_MARK;
+  if (this.checkFor(isAll(this.xMark))) {
+    return this.xMark;
+  } else if (this.checkFor(isAll(this.oMark))) {
+    return this.oMark;
   } else {
     return undefined;
   }
@@ -119,8 +124,8 @@ Board.prototype.getWinner = function() {
 Board.prototype.isDrawn = function() {
   var isWinnable = function(line) {
     return (
-      line.indexOf(X_MARK) === -1 ||
-      line.indexOf(O_MARK) === -1
+      line.indexOf(this.xMark) === -1 ||
+      line.indexOf(this.oMark) === -1
     );
   };
 
@@ -138,7 +143,7 @@ Board.prototype.checkFor = function(test) {
   var c;
 
   // check rows
-  for (r = 0; r < BOARD_DIMENSION; r++) {
+  for (r = 0; r < this.sideLength; r++) {
     line = this._positions[r];
     if (test(line)) {
       return true;
@@ -146,9 +151,9 @@ Board.prototype.checkFor = function(test) {
   }
 
   // check columns
-  for (c = 0; c < BOARD_DIMENSION; c++) {
+  for (c = 0; c < this.sideLength; c++) {
     line = [];
-    for (r = 0; r < BOARD_DIMENSION; r++) {
+    for (r = 0; r < this.sideLength; r++) {
       line.push(this.get(r, c));
     }
     if (test(line)) {
@@ -158,7 +163,7 @@ Board.prototype.checkFor = function(test) {
 
   // check major diagonal
   line = [];
-  for (r = 0; r < BOARD_DIMENSION; r++) {
+  for (r = 0; r < this.sideLength; r++) {
     c = r;
     line.push(this.get(r, c));
   }
@@ -168,8 +173,8 @@ Board.prototype.checkFor = function(test) {
 
   // check minor diagonal
   line = [];
-  for (r = 0; r < BOARD_DIMENSION; r++) {
-    c = BOARD_DIMENSION - 1 - r;
+  for (r = 0; r < this.sideLength; r++) {
+    c = this.sideLength - 1 - r;
     line.push(this.get(r, c));
   }
   if (test(line)) {
