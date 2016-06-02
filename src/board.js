@@ -81,22 +81,11 @@ Board.prototype.getState = function() {
     // none
     // invalid
 
-  var win = this.emptyMark;
-  var checkForO = [];
-  var checkForX = [];
-  var state = '';
-  // this._forEachPosition(function(mark) {
-  //   if (mark !== this.emptyMark && mark !== )
-  // });
-  // this._forEachLine(function(marks, positions) {
-  //   // check win state
-  //   if (marks[this.oMark] === this.sideLength ||
-  //       marks[this.xMark] === this.sideLength) {
-  //     if (win === this.emptyMark) {
-  //       win = 
-  //     }
-  //   }
-  // });
+  // var win = this.emptyMark;
+  // var checkForO = [];
+  // var checkForX = [];
+  // var state = '';
+
 };
 
 // if no one has won, return undefined

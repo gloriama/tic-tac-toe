@@ -3,7 +3,6 @@ var utils = require('./utils');
 var Board = require('./board');
 
 var YES_RESPONSES = { y: true, yes: true };
-var NO_RESPONSES = { n: true, no: true };
 
 var startGame = function() {
   var board = new Board();
@@ -96,7 +95,9 @@ var runAiTurn = function(board) {
     Math.floor(Math.random() * board.sideLength),
     Math.floor(Math.random() * board.sideLength),
     board.oMark
-  )) {}
+  )) {
+    // deliberately empty loop body
+  }
 }
 
 prompt.start();
