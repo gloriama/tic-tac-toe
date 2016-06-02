@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/gloriama/tic-tac-toe#readme",
   "dependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
     "prompt": "^1.0.0"
   }
 }
