@@ -39,6 +39,8 @@ var runTurns = function(board, callback) {
       var c = parseInt(result.c);
       if (!board.set(r, c, constants.X_MARK)) {
         console.log('That spot is already taken');
+      } else {
+        runAiTurn(board);
       }
       board.print();
       if (board.getWinner() !== undefined) {
@@ -54,6 +56,14 @@ var isValidIndex = function(input) {
   return /^\d+$/.test(input) && // contains only digits
     input < BOARD_DIMENSION;
 };
+
+var runAiTurn = function(board) {
+  while (!board.set(
+    Math.floor(Math.random() * BOARD_DIMENSION),
+    Math.floor(Math.random() * BOARD_DIMENSION),
+    O_MARK
+  )) {}
+}
 
 prompt.start();
 startGame();
