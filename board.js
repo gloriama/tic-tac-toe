@@ -96,7 +96,7 @@ Board.prototype.getState = function() {
 
 // if no one has won, return undefined
 Board.prototype.getWinner = function() {
-  var isAllTest = function(mark) {
+  var isAll = function(mark) {
     return function(line) {
       for (var i = 0; i < line.length; i++) {
         if (line[i] !== mark) {
@@ -107,13 +107,25 @@ Board.prototype.getWinner = function() {
     };
   };
 
-  if (this.checkFor(isAllTest(X_MARK))) {
+  if (this.checkFor(isAll(X_MARK))) {
     return X_MARK;
-  } else if (this.checkFor(isAllTest(O_MARK))) {
+  } else if (this.checkFor(isAll(O_MARK))) {
     return O_MARK;
   } else {
     return undefined;
   }
+};
+
+Board.prototype.isDrawn = function() {
+  var isWinnable = function(line) {
+    return (
+      line.indexOf(X_MARK) === -1 ||
+      line.indexOf(O_MARK) === -1
+    );
+  };
+
+  return this.getWinner() === undefined &&
+    !this.checkFor(isWinnable);
 };
 
 Board.prototype.checkFor = function(test) {

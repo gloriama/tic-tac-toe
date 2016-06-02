@@ -13,12 +13,17 @@ var NO_RESPONSES = { n: true, no: true };
 var startGame = function() {
   var board = new Board();
 
+  // print initial board and instructions
   console.log(utils.repeatedChar('\n', 100));
   board.print();
   console.log('Welcome! You are', X_MARK + ', and the computer is', O_MARK + '.');
   
+  // run through all turns until game ends
+  // then print closing message and prompt to play again
   runTurns(board, function(outcome) {
-    if (outcome === X_MARK) {
+    if (outcome === 'drew') {
+      console.log('Draw! No one can win.');
+    } else if (outcome === 'won') {
       console.log('Congratulations! You won.');
     } else {
       console.log('You lost.');
@@ -36,32 +41,52 @@ var startGame = function() {
   });
 };
 
-var runTurns = function(board, callback) {
+var runTurns = function(board, endCallback) {
   console.log('Enter a row index first, and then a column index.');
   prompt.get(['r', 'c'], function(err, result) {
     if (err) {
       return err;
     }
 
+    // print empty lines to "clear" window
     console.log(utils.repeatedChar('\n', 100));
 
+    // validate r, c input
     if (!isValidIndex(result.r) || !isValidIndex(result.c)) {
       console.log('Please enter integers from 0 to', BOARD_DIMENSION - 1 + '.');
-      runTurns(board, callback);
+      runTurns(board, endCallback);
+      return;
+    }
+
+    // update board, collecting message to print (if any)
+    var r = parseInt(result.r);
+    var c = parseInt(result.c);
+    var message = '';
+    if (!board.set(r, c, constants.X_MARK)) {
+      message = 'That spot is already taken.';
+    } else if (
+        board.getWinner() === undefined &&
+        !board.isDrawn()
+      ) {
+      runAiTurn(board);
+    }
+
+    // print board (and message, if any)
+    board.print();
+    if (message) {
+      console.log(message);
+    }
+
+    // run the next turn, or end game
+    var winner = board.getWinner();
+    if (winner === X_MARK) {
+      endCallback('won');
+    } else if (winner === O_MARK) {
+      endCallback('lost');
+    } else if (board.isDrawn()) {
+      endCallback('drew');
     } else {
-      var r = parseInt(result.r);
-      var c = parseInt(result.c);
-      if (!board.set(r, c, constants.X_MARK)) {
-        console.log('That spot is already taken.');
-      } else if (board.getWinner() === undefined) {
-        runAiTurn(board);
-      }
-      board.print();
-      if (board.getWinner() !== undefined) {
-        callback(board.getWinner());
-      } else {
-        runTurns(board, callback);
-      }
+      runTurns(board, endCallback);
     }
   })
 };
