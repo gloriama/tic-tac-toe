@@ -12,6 +12,7 @@
   // player: 'x' (or 'o' or undefined)
 // print()
 
+var utils = require('./utils');
 var constants = require('./constants');
 var BOARD_DIMENSION = constants.BOARD_DIMENSION;
 var O_MARK = constants.O_MARK;
@@ -51,8 +52,8 @@ Board.prototype.clear = function() {
 };
 
 Board.prototype.print = function() {
-  var singleLine = repeatedChar('-', BOARD_DIMENSION * 4 + 1);
-  var doubleLine = repeatedChar('=', BOARD_DIMENSION * 4 + 1);
+  var singleLine = utils.repeatedChar('-', BOARD_DIMENSION * 4 + 1);
+  var doubleLine = utils.repeatedChar('=', BOARD_DIMENSION * 4 + 1);
 
   var result = doubleLine + '\n';
   result += this._positions.map(function(row) {
@@ -160,16 +161,4 @@ Board.prototype.getWinner = function() {
   }  
 };
 
-// helper function
-var repeatedChar = function(char, numTimes) {
-  var result = '';
-  for (var i = 0; i < numTimes; i++) {
-    result += char;
-  }
-  return result;
-}
-
 module.exports = Board;
-
-var b = new Board();
-b.print();
