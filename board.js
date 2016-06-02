@@ -30,9 +30,12 @@ var Board = function() {
 };
 
 Board.prototype.set = function(r, c, mark) {
-  var oldValue = this._positions[r][c];
-  this._positions[r][c] = mark;
-  return oldValue;
+  if (this._positions[r][c] !== EMPTY_MARK) {
+    return false;
+  } else {
+    this._positions[r][c] = mark;
+    return true;
+  }
 };
 
 Board.prototype.get = function(r, c) {

@@ -37,9 +37,10 @@ var runTurns = function(board, callback) {
     } else {
       var r = parseInt(result.r);
       var c = parseInt(result.c);
-      board.set(r, c, constants.X_MARK);
+      if (!board.set(r, c, constants.X_MARK)) {
+        console.log('That spot is already taken');
+      }
       board.print();
-      console.log(board.getWinner());
       if (board.getWinner() !== undefined) {
         callback(board.getWinner());
       } else {
