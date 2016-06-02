@@ -96,69 +96,75 @@ Board.prototype.getState = function() {
 
 // if no one has won, return undefined
 Board.prototype.getWinner = function() {
-  // check rows
-  for (var r = 0; r < BOARD_DIMENSION; r++) {
-    var candidate;
-    for (var c = 0; c < BOARD_DIMENSION; c++) {
-      if (this.get(r, c) === EMPTY_MARK ||
-          candidate !== undefined &&
-          this.get(r, c) !== candidate) {
-        candidate = undefined;
-        break;
+  var isAllTest = function(mark) {
+    return function(line) {
+      for (var i = 0; i < line.length; i++) {
+        if (line[i] !== mark) {
+          return false;
+        }
       }
-      candidate = this.get(r, c);
-    }
-    if (candidate !== undefined) {
-      return candidate;
-    }
+      return true;
+    };
+  };
+
+  if (this.checkFor(isAllTest(X_MARK))) {
+    return X_MARK;
+  } else if (this.checkFor(isAllTest(O_MARK))) {
+    return O_MARK;
+  } else {
+    return undefined;
+  }
+};
+
+Board.prototype.checkFor = function(test) {
+  // test is a function that takes a line of items in the board
+  // (a row, column, or diagonal)
+  // checkFor returns whether or not ANY line is true
+  
+  var line;
+  var r;
+  var c;
+
+  // check rows
+  for (r = 0; r < BOARD_DIMENSION; r++) {
+    line = this._positions[r];
+    if (test(line)) {
+      return true;
+    } 
   }
 
   // check columns
-  for (var c = 0; c < BOARD_DIMENSION; c++) {
-    var candidate;
-    for (var r = 0; r < BOARD_DIMENSION; r++) {
-      if (this.get(r, c) === EMPTY_MARK ||
-          candidate !== undefined &&
-          this.get(r, c) !== candidate) {
-        candidate = undefined;
-        break;
-      }
-      candidate = this.get(r, c);
+  for (c = 0; c < BOARD_DIMENSION; c++) {
+    line = [];
+    for (r = 0; r < BOARD_DIMENSION; r++) {
+      line.push(this.get(r, c));
     }
-    if (candidate !== undefined) {
-      return candidate;
+    if (test(line)) {
+      return true;
     }
   }
 
   // check major diagonal
-  var candidate;
-  for (var r = 0; r < BOARD_DIMENSION; r++) {
-    var c = r;
-    if (this.get(r, c) === EMPTY_MARK ||
-        candidate !== undefined && this.get(r, c) !== candidate) {
-      candidate = undefined;
-      break;
-    }
-    candidate = this.get(r, c);
+  line = [];
+  for (r = 0; r < BOARD_DIMENSION; r++) {
+    c = r;
+    line.push(this.get(r, c));
   }
-  if (candidate !== undefined) {
-    return candidate;
+  if (test(line)) {
+    return true;
   }
 
   // check minor diagonal
-  candidate = undefined;
-  for (var r = 0; r < BOARD_DIMENSION; r++) {
-    var c = BOARD_DIMENSION - 1 - r;
-    if (this.get(r, c) === EMPTY_MARK ||
-        candidate !== undefined && this.get(r, c) !== candidate) {
-      candidate = undefined;
-      break;
-    }
-    candidate = this.get(r, c);
+  line = [];
+  for (r = 0; r < BOARD_DIMENSION; r++) {
+    c = BOARD_DIMENSION - 1 - r;
+    line.push(this.get(r, c));
   }
-  if (candidate !== undefined) {
-    return candidate;
-  }  
+  if (test(line)) {
+    return true;
+  }
+
+  return false;
 };
 
 module.exports = Board;
