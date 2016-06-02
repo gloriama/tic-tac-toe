@@ -4,5 +4,4 @@ exports.repeatedChar = function(char, numTimes) {
     result += char;
   }
   return result;
-}
-
+};
